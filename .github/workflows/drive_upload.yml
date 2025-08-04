@@ -2,8 +2,8 @@ name: Daily Drive Upload
 
 on:
   schedule:
-    - cron: '7 7 * * *'  # 12:37 PM IST (7:07 AM UTC)
-  workflow_dispatch:       # Allows manual trigger from GitHub
+    - cron: '7 7 * * *'  # Runs at 12:37 PM IST (7:07 AM UTC)
+  workflow_dispatch:       # Allows manual run
 
 jobs:
   run_script:
@@ -21,13 +21,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
+        pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib
 
     - name: Run script
+      env:
+        TOKEN_JSON: ${{ secrets.TOKEN_JSON }}
       run: python current_time_script.py
-
-    - name: Upload token.json (optional backup)
-      uses: actions/upload-artifact@v4
-      with:
-        name: token
-        path: token.json
